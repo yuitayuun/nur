@@ -25,5 +25,8 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       # Step D: Actually compile the package!
-      - name: Build cfait
-        run: nix build .#cfait --print-out-paths | cachix push yui-nixos-cache # <-- Update this too!
+      - name: Build cfait and push to Cachix
+        # 1. nix build .#cfait: Builds the package
+        # 2. --print-out-paths: Prints the exact /nix/store/... path it just built
+        # 3. | cachix push yui-nixos-cache: Pipes that exact path straight into Cachix
+        run: nix build .#cfait --print-out-paths | cachix push yui-nixos-cache
