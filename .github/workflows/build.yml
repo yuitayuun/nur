@@ -26,4 +26,4 @@ jobs:
 
       # Step D: Actually compile the package!
       - name: Build cfait
-        run: nix build .#cfait
+        run: nix build .#cfait --print-out-paths | cachix push yui-nixos-cache # <-- Update this too!
