@@ -1,0 +1,29 @@
+name: Build and Cache Packages
+
+on:
+  push:
+    branches: ["main"] # Runs every time you git push to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # GitHub gives you a fresh Ubuntu server
+
+    steps:
+      # Step A: Download your repository's code onto this temporary server
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step B: Install the Nix package manager on this Ubuntu server
+      - name: Install Nix
+        uses: cachix/install-nix-action@v30
+
+      # Step C: Log into your Cachix account securely
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: yui-nixos-cache # Put your exact Cachix name here
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
+      # Step D: Actually compile the package!
+      - name: Build cfait
+        run: nix build .#cfait
